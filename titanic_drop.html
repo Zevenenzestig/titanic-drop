@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Titanic Drop</title>
+<style>
+:root{--bg:#0b0f17;--p:#141b27;--p2:#1d2736;--tx:#eaf0f8;--mu:#8795a8;--g:#1fe38a;--r:#ff4560;--go:#ffc83d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef2f8;--p:#fff;--p2:#e3e9f2;--tx:#121a26;--mu:#5b6b80}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px system-ui,Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 20px;background:var(--p);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.logo{font-weight:900;font-size:20px;color:var(--go)}.logo b{color:var(--g)}
+nav{display:flex;gap:6px}nav button{background:var(--p2);color:var(--tx);border:2px solid transparent;border-radius:8px;padding:9px 16px;font:700 14px inherit;cursor:pointer}nav .on{border-color:var(--go)}
+main{max-width:1000px;margin:auto;padding:14px}
+.c{background:var(--p);border-radius:14px;padding:16px}
+h3{margin:0 0 12px;font-size:12px;letter-spacing:.08em;color:var(--mu)}
+label{display:block;margin:12px 0 4px;color:var(--mu);font-size:12px}
+.seg{display:flex;gap:6px}.seg button,input{flex:1;background:var(--p2);color:var(--tx);border:2px solid transparent;border-radius:8px;padding:10px;font:inherit;cursor:pointer;width:100%}
+.seg button.on{border-color:var(--go)}input{cursor:text}select{background:var(--p2);color:var(--tx);border:2px solid transparent;border-radius:8px;padding:10px;font:inherit;width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.two{grid-template-columns:1fr}}
+.res{text-align:center}.pr{font:900 48px inherit;margin:6px 0}.vd{font-weight:800;font-size:17px}
+.big{font:900 34px inherit;color:var(--go);text-align:center;margin:6px 0 14px;letter-spacing:.06em}
+.drop{display:grid;grid-template-columns:270px 1fr;gap:14px}@media(max-width:860px){.drop{grid-template-columns:1fr}}
+.pcard{text-align:center}.av{font-size:60px}.st{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--p2);font-size:14px}.st span:first-child{color:var(--mu)}
+.wheelbox{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+#wheel{width:250px;height:250px;position:relative}#wheel svg,.gauge svg{width:100%;height:100%}.gauge{width:230px;height:230px;margin:auto}
+#needle{transform-origin:100px 100px;transition:transform 4s cubic-bezier(.12,.7,.1,1)}
+#go{position:absolute;inset:0;margin:auto;width:108px;height:108px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--go),#ff9d2e);color:#1a1200;font-weight:900;font-size:15px;cursor:pointer}
+#go:disabled{filter:grayscale(.8);cursor:default}
+.side{background:var(--p2);border-radius:12px;padding:12px 16px;min-width:120px;text-align:center}.side b{font-size:22px;display:block}
+.ups{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}@media(max-width:560px){.ups{grid-template-columns:1fr}}
+.up{background:var(--p2);color:var(--tx);border:2px solid transparent;border-radius:10px;padding:12px;font:inherit;cursor:pointer;text-align:left}
+.up b{display:block;margin-bottom:4px}.up small{color:var(--mu);display:block}.up.on{border-color:var(--go)}.up:disabled{opacity:.4;cursor:default}
+#msg{min-height:26px;font-weight:800;font-size:16px;margin:8px 0}.w{color:var(--g)}.l{color:var(--r)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.send{background:var(--g);color:#06281a;border:0;border-radius:10px;padding:12px 18px;font:800 15px inherit;cursor:pointer}
+.chip{background:var(--p2);color:var(--tx);border:0;border-radius:8px;padding:10px 14px;font:inherit;cursor:pointer}
+.log{font-size:13px;color:var(--mu);margin-top:10px;max-height:110px;overflow:auto}.note{color:var(--mu);font-size:11px;margin-top:10px}.hide{display:none}
+.rg{display:flex;gap:8px;align-items:center}.rg input[type=range]{padding:0;accent-color:var(--go)}.rg input[type=number]{width:80px;flex:none}
+#fp{font-size:76px;line-height:1;margin:6px 0 2px;text-shadow:0 0 30px currentColor}.cap{color:var(--mu);font-size:13px;margin-bottom:12px}
+#dots{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;max-width:300px;margin:0 auto 16px}
+#dots i{aspect-ratio:1;border-radius:50% 50% 35% 35%;background:var(--p2);transition:background .35s,transform .35s,box-shadow .35s}
+#dots i.on{background:var(--c);transform:scale(1.08);box-shadow:0 0 8px var(--c)}
+.tl{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);max-width:360px;margin:0 auto 4px}
+.track{position:relative;height:10px;background:var(--p2);border-radius:5px;max-width:360px;margin:6px auto 16px}
+.track i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width .6s,background .6s}
+#ship{position:absolute;top:50%;font-size:26px;transition:left .6s,transform .6s}
+.badge{display:inline-block;padding:9px 18px;border-radius:20px;font-weight:800;font-size:16px;transition:background .4s,color .4s}
+#fac{max-width:360px;margin:8px auto 0}.fr{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:13px}.fr span{width:96px;text-align:left;color:var(--mu)}
+.fb{flex:1;height:8px;background:var(--p2);border-radius:4px;position:relative}.fb i{position:absolute;top:0;bottom:0;border-radius:4px;transition:width .4s}.fr b{width:34px;text-align:right}
+</style></head><body>
+<header><div class="logo">TITANIC <b>DROP</b></div><nav><button id="t1" class="on">Прогнозирование</button><button id="t2">Titanic Drop</button></nav></header>
+<main>
+<section id="pg1" class="two">
+<div class="c"><h3>СОБЕРИ ПАССАЖИРА</h3>
+<label>Класс билета</label><div class="seg" id="fc"><button data-v="0">1</button><button data-v="1">2</button><button data-v="2" class="on">3</button></div>
+<label>Пол</label><div class="seg" id="fs"><button data-v="0" class="on">Мужской</button><button data-v="1">Женский</button></div>
+<label>Возраст</label><div class="rg"><input type="range" id="far" min="0" max="80" value="20"><input type="number" id="fa" min="0" max="80" value="20"></div>
+<label>Цена билета (£)</label><input type="number" id="ff" min="0" max="300" value="8" step="0.5">
+<div class="two" style="gap:10px"><div><label>Братья/сёстры/супруги</label><select id="fi"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div><div><label>Родители/дети</label><select id="fj"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div>
+<div class="c res"><h3>ПРОГНОЗ ВЫЖИВАНИЯ</h3><div class="pr" id="fp">—</div>
+<div id="dots"></div>
+<div class="badge" id="fv"></div>
+<h3 style="margin-top:18px">ЧТО ВЛИЯЕТ</h3><div id="fac"></div></div></section>
+
+<section id="pg2" class="hide"><div class="big">TITANIC DROP</div>
+<div class="drop">
+<div class="c pcard"><h3>ТВОЙ ПАССАЖИР</h3><div class="av">🧍</div>
+<div class="st"><span>Класс билета</span><b id="sc"></b></div><div class="st"><span>Пол</span><b id="ss"></b></div><div class="st"><span>Возраст</span><b id="sa"></b></div>
+<div class="st"><span>Братья/сёстры/супруги</span><b>0</b></div><div class="st"><span>Родители/дети</span><b>0</b></div>
+<div class="pr" id="pr"></div><div style="color:var(--mu);font-size:12px">шанс выжить</div></div>
+<div class="c"><h3>УЛУЧШИ ПАССАЖИРА</h3><div class="ups" id="ups"></div>
+<div class="wheelbox"><div class="side">Шанс успеха<b id="ch">—</b></div>
+<div id="wheel"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="82" fill="none" stroke="#ff4560" stroke-width="16"/>
+<circle id="arc" cx="100" cy="100" r="82" fill="none" stroke="#1fe38a" stroke-width="16" stroke-dasharray="0 600" transform="rotate(-90 100 100)"/>
+<g id="needle"><polygon points="100,6 94,26 106,26" fill="#fff"/><line x1="100" y1="26" x2="100" y2="48" stroke="#fff" stroke-width="3"/></g></svg><button id="go">UPGRADE</button></div>
+<div class="side">Если успех<b id="gain">—</b></div></div>
+<div id="msg"></div>
+<div class="row"><button class="send" id="send">🚢 Отправить в рейс</button><button class="chip" id="reset">Новый пассажир</button></div>
+<div class="log" id="log"></div>
+<div class="note">По 3 попытки на улучшение класса, пола и возраста. Не повезло с апгрейдом — пассажир ухудшается: старше или класс ниже. Если пол мужской и смена не удалась, он остаётся мужским.</div></div></div></section>
+</main>
+<script>
+const D="3,0,22,1,0,7,0;1,1,38,1,0,71,1;3,1,26,0,0,8,1;1,1,35,1,0,53,1;3,0,35,0,0,8,0;1,0,54,0,0,52,0;3,0,2,3,1,21,0;3,1,27,0,2,11,1;2,1,14,1,0,30,1;3,1,4,1,1,17,1;1,1,58,0,0,27,1;3,0,20,0,0,8,0;3,0,39,1,5,31,0;3,1,14,0,0,8,0;2,1,55,0,0,16,1;3,0,2,4,1,29,0;3,1,31,1,0,18,0;2,0,35,0,0,26,0;2,0,34,0,0,13,1;3,1,15,0,0,8,1;1,0,28,0,0,36,1;3,1,8,3,1,21,0;3,1,38,1,5,31,1;1,0,19,3,2,263,0;1,0,40,0,0,28,0;2,0,66,0,0,10,0;1,0,28,1,0,82,0;1,0,42,1,0,52,0;3,0,21,0,0,8,0;3,1,18,2,0,18,0;3,1,14,1,0,11,1;3,1,40,1,0,9,0;2,1,27,1,0,21,0;2,1,3,1,2,42,1;3,1,19,0,0,8,1;3,1,18,1,0,18,0;3,0,7,4,1,40,0;3,0,21,0,0,8,0;1,1,49,1,0,77,1;2,1,29,1,0,26,1;1,0,65,0,1,62,0;2,1,21,0,0,10,1;3,0,28,0,0,7,0;2,1,5,1,2,28,1;3,0,11,5,2,47,0;3,0,22,0,0,7,0;1,1,38,0,0,80,1;1,0,45,1,0,83,0;3,0,4,3,2,28,0;2,1,29,0,0,10,1;3,0,19,0,0,8,0;3,1,17,4,2,8,1;3,0,26,2,0,9,0;2,0,32,0,0,10,0;3,1,16,5,2,47,0;2,0,21,0,0,74,0;3,0,26,1,0,14,0;3,0,32,0,0,56,1;3,0,25,0,0,8,0;2,0,1,0,2,29,1;3,1,30,0,0,12,1;3,0,22,0,0,9,0;3,0,29,0,0,10,1;1,0,28,0,0,47,0;2,1,17,0,0,10,1;3,1,33,3,0,16,1;3,0,16,1,3,34,0;1,1,23,3,2,263,1;3,0,24,0,0,8,0;3,0,29,0,0,8,0;3,0,20,0,0,8,0;1,0,46,1,0,61,0;3,0,26,1,2,21,0;3,0,59,0,0,7,0;1,0,71,0,0,35,0;1,0,23,0,1,63,1;2,1,34,0,1,23,1;2,0,34,1,0,26,0;3,1,28,0,0,8,0;1,0,21,0,1,77,0;3,0,33,0,0,9,0;3,0,37,2,0,8,0;3,0,28,0,0,8,0;3,1,21,0,0,8,1;3,0,38,0,0,8,0;1,0,47,0,0,52,0;3,1,14,1,0,14,0;3,0,22,0,0,8,0;3,1,20,1,0,10,0;3,1,17,0,0,14,0;3,0,21,0,0,8,0;3,0,70,0,0,8,0;2,0,29,1,0,21,0;1,0,24,0,1,248,0;3,1,2,4,2,31,0;2,0,21,2,0,74,0;2,0,32,1,0,30,0;2,1,32,0,0,13,1;1,0,54,0,1,77,0;3,0,12,1,0,11,1;3,0,24,0,0,7,1;3,0,45,0,0,7,0;3,0,33,0,0,8,0;3,0,20,0,0,7,0;3,1,47,1,0,14,0;2,1,29,1,0,26,1;2,0,25,0,0,13,0;2,0,23,0,0,15,0;1,1,19,0,2,26,1;1,0,37,1,0,53,0;3,0,16,0,0,9,0;1,0,24,0,0,79,0;3,1,22,0,0,8,1;3,1,24,1,0,16,1;3,0,19,0,0,7,0;2,0,18,0,0,12,0;2,0,19,1,1,37,0;3,0,27,0,0,8,1;3,1,9,2,2,34,0;2,0,36,0,2,26,0;2,0,42,0,0,13,0;2,0,51,0,0,13,0;1,1,22,1,0,67,1;3,0,56,0,0,8,0;3,0,40,0,2,14,0;1,0,51,0,1,61,0;3,1,16,0,0,8,1;3,0,30,0,0,8,0;3,0,44,0,1,16,0;2,1,40,0,0,16,1;3,0,26,0,0,8,0;3,0,17,0,0,9,0;3,0,1,4,1,40,0;3,0,9,0,2,21,1;3,1,45,1,4,28,0;3,0,28,0,0,56,0;1,0,61,0,0,34,0;3,0,4,4,1,29,0;3,1,1,1,1,11,1;3,0,21,0,0,8,0;1,0,56,0,0,31,0;3,0,18,1,1,8,0;1,1,50,0,0,29,0;2,0,30,0,0,13,0;3,0,36,0,0,0,0;3,0,9,4,2,31,0;2,0,1,2,1,39,1;3,1,4,0,2,22,1;1,0,45,0,0,27,1;3,0,40,1,1,16,0;3,0,36,0,0,8,0;2,1,32,0,0,13,1;2,0,19,0,0,13,0;3,1,19,1,0,8,1;2,0,3,1,1,26,1;1,1,44,0,0,28,1;1,1,58,0,0,147,1;3,0,42,0,1,8,0;2,1,24,0,0,13,0;3,0,28,0,0,10,0;3,0,34,0,0,6,0;3,0,46,0,0,7,0;3,0,18,0,0,8,1;3,1,2,0,1,10,0;3,0,32,1,0,16,0;3,0,26,0,0,19,1;3,1,16,0,0,8,1;1,0,40,0,0,31,1;3,0,24,0,0,7,0;2,1,35,0,0,21,1;3,0,22,0,0,7,0;2,0,30,0,0,13,0;1,1,31,1,0,113,1;3,1,27,0,0,8,1;2,0,42,1,0,27,0;1,1,32,0,0,76,1;2,0,30,0,0,10,0;3,0,16,0,0,8,1;2,0,27,0,0,13,0;3,0,51,0,0,8,0;1,0,38,1,0,90,1;3,0,22,0,0,9,0;2,0,19,0,0,10,1;3,0,20,0,0,7,0;2,0,18,0,0,13,0;1,1,35,1,0,83,1;3,0,29,0,0,8,0;2,0,59,0,0,14,0;3,1,5,4,2,31,1;2,0,24,0,0,10,0;2,0,44,1,0,26,0;2,1,8,0,2,26,1;2,0,19,0,0,10,0;2,0,33,0,0,12,0;2,0,29,0,0,10,0;3,0,22,0,0,7,0;3,0,30,0,0,7,0;1,0,44,2,0,90,0;3,1,25,0,0,8,0;2,1,24,0,2,14,1;1,0,37,1,1,53,1;2,0,54,1,0,26,0;3,1,29,1,1,10,0;1,0,62,0,0,27,0;3,0,30,1,0,16,0;3,1,41,0,2,20,0;3,1,29,0,2,15,1;1,1,30,0,0,86,1;1,1,35,0,0,512,1;2,1,50,0,1,26,1;3,0,3,4,2,31,1;1,0,52,1,1,80,0;1,0,40,0,0,0,0;2,0,36,0,0,10,0;3,0,16,4,1,40,0;3,0,25,1,0,8,1;1,1,58,0,1,153,1;1,1,35,0,0,136,1;3,0,25,0,0,0,1;2,1,41,0,1,20,1;1,0,37,0,1,30,0;1,1,63,1,0,78,1;3,1,45,0,0,8,0;3,0,7,4,1,29,0;3,1,35,1,1,20,1;3,0,65,0,0,8,0;3,0,28,0,0,8,0;3,0,16,0,0,10,0;3,0,19,0,0,8,1;3,0,33,0,0,9,0;3,0,30,0,0,10,1;3,0,22,0,0,8,0;2,0,42,0,0,13,1;3,1,22,0,0,8,1;1,1,26,0,0,79,1;1,1,19,1,0,91,1;2,0,36,0,0,13,0;3,1,24,0,0,9,0;3,0,24,0,0,8,0;3,0,24,0,0,7,0;1,1,2,1,2,152,0;1,1,50,0,1,248,1;3,0,19,0,0,0,0;1,0,1,1,2,152,1;1,1,17,1,0,109,1;2,0,30,1,0,24,0;1,1,30,0,0,57,1;1,1,24,0,0,83,1;1,1,18,2,2,262,1;2,1,26,1,1,26,0;3,0,28,0,0,8,0;2,0,43,1,1,26,0;3,1,26,0,0,8,1;2,1,24,1,0,26,1;2,0,54,0,0,14,0;1,1,31,0,2,165,1;1,1,40,1,1,134,1;3,0,22,0,0,7,0;3,0,27,0,0,8,0;2,1,30,0,0,12,1;2,1,22,1,1,29,1;1,1,36,0,0,136,1;3,0,61,0,0,6,0;2,1,36,0,0,13,1;3,1,31,1,1,21,1;1,1,16,0,1,58,1;1,0,46,0,0,28,0;1,0,38,0,1,153,0;3,0,16,2,0,18,0;1,0,29,1,0,67,0;1,1,41,0,0,134,1;3,0,45,0,0,8,1;1,0,45,0,0,36,0;2,0,2,1,1,26,1;1,1,24,3,2,263,1;2,0,28,0,0,13,0;2,0,25,0,0,13,0;2,0,36,0,0,13,0;2,1,24,0,0,13,1;2,1,40,0,0,13,1;3,0,3,1,1,16,1;3,0,42,0,0,9,0;3,0,23,0,0,9,0;3,0,15,1,1,7,0;3,0,25,1,0,18,0;3,0,28,0,0,10,0;1,1,22,0,1,55,1;2,1,38,0,0,13,0;3,0,40,1,4,28,0;2,0,29,1,0,28,0;3,1,45,0,1,14,0;3,0,35,0,0,7,0;3,0,30,0,0,7,0;1,1,60,1,0,75,1;1,1,24,0,0,69,1;1,0,25,1,0,55,1;3,0,18,1,0,6,0;3,0,19,0,0,8,0;1,0,22,0,0,136,0;3,1,3,3,1,21,0;3,1,22,0,0,7,1;1,0,27,0,2,212,0;3,0,20,0,0,4,0;3,0,19,0,0,8,0;1,1,42,0,0,228,1;3,1,1,0,2,16,1;3,0,32,0,0,8,0;1,1,35,1,0,52,1;2,0,18,0,0,74,0;3,0,1,5,2,47,0;2,1,36,0,0,13,1;2,1,17,0,0,12,1;1,0,36,1,2,120,1;3,0,21,0,0,8,1;3,0,28,2,0,8,0;1,1,23,1,0,113,1;3,1,24,0,2,17,1;3,0,22,0,0,8,0;3,1,31,0,0,8,0;2,0,46,0,0,26,0;2,0,23,0,0,10,0;2,1,28,0,0,13,1;3,0,39,0,0,8,1;3,0,26,0,0,8,0;3,1,21,1,0,10,0;3,0,28,1,0,16,0;3,1,20,0,0,9,0;2,0,34,1,0,21,0;3,0,51,0,0,8,0;2,0,3,1,1,19,1;3,0,21,0,0,8,0;1,1,33,1,0,90,1;3,0,44,0,0,8,1;2,1,34,1,1,32,1;2,1,18,0,2,13,1;2,0,30,0,0,13,0;3,1,10,0,2,24,0;3,0,21,0,0,8,0;3,0,29,0,0,8,0;3,1,28,1,1,14,0;3,0,18,1,1,20,0;2,1,28,1,0,26,1;2,1,19,0,0,26,1;3,0,32,0,0,8,1;1,0,28,0,0,27,1;2,1,42,1,0,26,1;3,0,17,0,0,7,0;1,0,50,1,0,56,0;1,1,14,1,2,120,1;3,1,21,2,2,34,0;2,1,24,2,3,19,1;1,0,64,1,4,263,0;2,0,31,0,0,10,0;2,1,45,1,1,26,1;3,0,20,0,0,10,0;3,0,25,1,0,8,0;2,1,28,0,0,13,1;1,0,4,0,2,82,1;2,1,13,0,1,20,1;1,0,34,0,0,27,1;3,1,5,2,1,19,1;1,0,52,0,0,30,1;2,0,36,1,2,28,0;1,0,30,0,0,28,0;1,0,49,1,0,89,1;3,0,29,0,0,8,1;1,0,65,0,0,27,0;2,1,50,0,0,10,1;1,0,48,0,0,27,1;3,0,34,0,0,8,0;1,0,47,0,0,38,0;2,0,48,0,0,13,0;3,0,38,0,0,7,0;1,0,56,0,0,27,0;3,1,1,2,1,19,1;3,0,38,0,0,9,0;2,1,33,1,2,28,1;2,1,23,0,0,14,1;3,1,22,0,0,10,0;2,0,34,1,0,21,0;3,0,29,1,0,7,0;3,0,22,0,0,8,0;3,1,2,0,1,12,1;3,0,9,5,2,47,0;3,0,50,0,0,8,0;3,1,63,0,0,10,1;1,0,25,1,0,91,1;1,1,35,1,0,90,1;1,0,58,0,0,30,0;3,0,30,0,0,8,0;3,0,9,1,1,16,1;3,0,21,0,0,7,0;1,0,55,0,0,30,0;1,0,71,0,0,50,0;3,0,21,0,0,8,0;1,1,54,1,0,78,1;1,1,25,1,2,152,0;3,0,24,0,0,8,0;3,0,17,0,0,9,0;3,1,21,0,0,8,0;3,1,37,0,0,10,0;1,1,16,0,0,86,1;1,0,18,1,0,109,0;2,1,33,0,2,26,1;3,0,28,0,0,23,0;3,0,26,0,0,56,1;3,0,29,0,0,8,1;1,0,36,0,0,26,1;1,1,54,1,0,59,1;3,0,24,0,0,7,0;1,0,47,0,0,34,0;2,1,34,0,0,10,1;2,1,36,1,0,26,1;3,0,32,0,0,8,0;1,1,30,0,0,94,1;3,0,22,0,0,8,0;1,1,44,0,1,58,1;3,0,40,0,0,8,0;2,1,50,0,0,10,1;3,0,39,0,0,8,0;2,0,23,2,1,12,0;2,1,2,1,1,26,1;3,0,17,1,1,7,0;3,1,30,0,0,9,0;2,1,7,0,2,26,1;1,0,45,0,0,27,0;1,1,30,0,0,106,1;1,1,22,0,2,50,1;1,1,36,0,2,71,1;3,1,9,4,2,31,0;3,1,11,4,2,31,0;2,0,32,1,0,26,1;1,0,50,1,0,106,0;1,0,64,0,0,26,0;2,1,19,1,0,26,1;3,0,33,1,1,21,0;2,0,8,1,1,37,1;1,0,17,0,2,111,1;2,0,27,0,0,26,0;3,0,22,0,0,7,1;3,1,22,0,0,8,1;1,0,62,0,0,27,0;1,1,48,1,0,40,1;1,1,39,1,1,80,1;3,1,36,1,0,17,1;3,0,40,0,0,8,0;2,0,28,0,0,14,0;3,0,24,2,0,24,0;3,0,19,0,0,8,0;3,1,29,0,4,21,0;3,0,32,0,0,8,1;2,0,62,0,0,10,1;1,1,53,2,0,51,1;1,0,36,0,0,26,1;3,0,16,0,0,8,0;3,0,19,0,0,14,0;2,1,34,0,0,13,1;1,1,39,1,0,56,1;3,0,32,0,0,8,1;2,1,25,1,1,30,1;1,1,39,1,1,111,1;2,0,54,0,0,26,0;1,0,36,0,0,40,0;1,1,18,0,2,80,1;2,0,47,0,0,15,0;1,0,60,1,1,79,1;3,0,22,0,0,8,0;3,0,35,0,0,7,0;1,1,52,1,0,78,1;3,0,47,0,0,7,0;2,0,37,1,0,26,0;3,0,36,1,1,24,0;3,0,49,0,0,0,0;1,0,49,1,0,57,1;2,1,24,2,1,27,1;3,0,44,0,0,8,0;1,0,35,0,0,27,1;3,0,36,1,0,16,0;3,0,30,0,0,8,0;1,0,27,0,0,30,1;2,1,22,1,2,42,1;1,1,40,0,0,153,1;3,1,39,1,5,31,0;3,0,35,0,0,8,0;2,1,24,1,2,65,1;3,0,34,1,1,14,0;3,1,26,1,0,16,0;2,1,4,2,1,39,1;2,0,26,0,0,10,0;3,0,27,1,0,14,0;1,0,42,1,0,53,1;3,0,20,1,1,16,1;3,0,21,0,0,8,0;3,0,21,0,0,16,0;1,0,61,0,0,32,0;2,0,57,0,0,12,0;1,1,21,0,0,78,1;3,0,26,0,0,8,0;1,0,80,0,0,30,1;3,0,51,0,0,7,0;1,0,32,0,0,30,1;3,1,9,3,2,28,0;2,1,28,0,0,13,1;3,0,32,0,0,8,0;2,0,31,1,1,26,0;3,1,41,0,5,40,0;3,0,20,0,0,8,0;1,1,24,0,0,69,1;3,1,2,3,2,28,0;3,1,1,2,1,19,1;1,0,48,1,0,77,1;3,0,19,0,0,8,0;1,0,56,0,0,36,1;3,1,23,0,0,8,1;2,1,18,0,1,23,1;3,0,21,0,0,8,0;3,1,18,0,0,7,0;2,0,24,2,0,74,0;3,1,32,1,1,16,0;2,0,23,0,0,13,0;1,0,58,0,2,113,0;1,0,50,2,0,134,1;3,0,40,0,0,7,0;1,0,47,0,0,26,0;3,0,36,0,0,7,0;3,0,20,1,0,8,1;2,0,32,2,0,74,0;2,0,25,0,0,13,0;3,0,43,0,0,8,0;2,1,40,1,1,39,1;1,0,31,1,0,52,0;2,0,70,0,0,10,0;2,0,31,0,0,13,1;3,0,18,0,0,8,0;3,0,24,0,0,8,0;3,1,18,0,0,10,1;3,1,43,1,6,47,0;1,0,36,0,1,512,1;1,0,27,0,0,77,1;3,0,20,0,0,9,0;3,0,14,5,2,47,0;2,0,60,1,1,39,0;2,0,25,1,2,42,0;3,0,14,4,1,40,0;3,0,19,0,0,10,0;3,0,18,0,0,8,0;1,1,15,0,1,211,1;1,0,31,1,0,57,1;3,1,4,0,1,13,1;3,0,25,0,0,7,0;1,0,60,0,0,27,0;2,0,52,0,0,14,0;3,0,44,0,0,8,0;1,0,49,1,1,111,0;3,0,42,0,0,8,0;1,1,18,1,0,228,1;1,0,35,0,0,26,1;3,1,18,0,1,14,0;3,0,25,0,0,8,0;3,0,26,1,0,8,0;2,0,39,0,0,26,0;2,1,45,0,0,14,1;1,0,42,0,0,26,1;1,1,22,0,0,152,1;1,1,24,0,0,50,1;1,0,48,1,0,52,1;3,0,29,0,0,9,0;2,0,52,0,0,13,0;3,0,19,0,0,8,0;1,1,38,0,0,228,1;2,1,27,0,0,10,1;3,0,33,0,0,8,0;2,1,6,0,1,33,1;3,0,17,1,0,7,0;2,0,34,0,0,13,0;2,0,50,0,0,13,0;1,0,27,1,0,53,1;3,0,20,0,0,9,0;2,1,30,3,0,21,1;2,0,25,1,0,26,0;3,1,25,1,0,8,0;1,1,29,0,0,211,1;3,0,11,0,0,19,0;2,0,23,0,0,13,0;2,0,23,0,0,13,0;3,0,28,0,0,16,0;3,1,48,1,3,34,0;1,0,35,0,0,512,1;1,0,36,1,0,79,0;1,1,21,2,2,262,1;3,0,24,1,0,16,0;3,0,31,0,0,8,1;1,0,70,1,1,71,0;3,0,16,1,1,20,0;2,1,30,0,0,13,1;1,0,19,1,0,53,0;3,0,31,0,0,8,0;2,1,4,1,1,23,1;3,0,6,0,1,12,1;3,0,33,0,0,10,0;3,0,23,0,0,8,0;2,1,48,1,2,65,1;2,0,1,1,1,14,1;3,0,28,0,0,8,0;2,0,18,0,0,12,0;3,0,34,0,0,8,0;1,1,33,0,0,86,1;3,0,41,0,0,7,0;3,0,20,0,0,7,1;1,1,36,1,2,120,1;3,0,16,0,0,8,0;1,1,51,1,0,78,1;3,1,30,0,0,8,0;3,0,32,0,0,8,0;3,0,24,0,0,10,0;3,0,48,0,0,8,0;2,1,57,0,0,10,0;2,1,54,1,3,23,1;3,0,18,0,0,8,0;3,1,5,0,0,12,1;1,1,43,0,1,211,1;3,1,13,0,0,7,1;1,1,17,1,0,57,1;1,0,29,0,0,30,0;3,0,25,0,0,7,0;3,0,25,0,0,7,0;3,1,18,0,0,7,1;3,0,8,4,1,29,0;3,0,1,1,2,21,1;1,0,46,0,0,79,0;2,0,16,0,0,26,0;3,0,25,0,0,8,0;2,0,39,0,0,13,0;1,1,49,0,0,26,1;3,1,31,0,0,9,1;3,0,30,0,0,7,0;3,1,30,1,1,24,0;2,0,34,0,0,13,0;2,1,31,1,1,26,1;1,0,11,1,2,120,1;3,0,0,0,1,9,1;3,0,27,0,0,7,1;3,0,31,0,0,8,0;1,0,39,0,0,0,0;3,1,18,0,0,8,0;2,0,39,0,0,13,0;1,1,33,1,0,53,1;3,0,26,0,0,8,0;3,0,39,0,0,24,0;2,0,35,0,0,10,0;3,1,6,4,2,31,0;3,0,30,0,0,8,0;3,1,23,0,0,8,0;2,0,31,1,1,37,0;3,0,43,0,0,6,0;3,0,10,3,2,28,0;1,1,52,1,1,94,1;3,0,27,0,0,9,1;1,0,38,0,0,0,0;3,1,27,0,1,12,1;3,0,2,4,1,40,0;2,0,1,0,2,37,1;1,1,62,0,0,80,1;3,1,15,1,0,14,1;2,0,1,1,1,19,1;3,0,23,0,0,8,0;3,0,18,0,0,8,0;1,1,39,1,1,83,1;3,0,21,0,0,9,0;3,0,32,0,0,56,1;3,0,20,0,0,8,0;2,0,16,0,0,10,0;1,1,30,0,0,31,1;3,0,34,0,0,6,0;3,0,17,0,0,9,0;3,0,42,0,0,8,0;3,0,35,0,0,8,0;2,0,28,0,1,33,0;3,0,4,4,2,31,0;3,0,74,0,0,8,0;3,1,9,1,1,15,0;1,1,16,0,1,39,1;2,1,44,1,0,26,0;3,1,18,0,1,9,1;1,1,45,1,1,165,1;1,0,51,0,0,27,1;3,1,24,0,3,19,1;3,0,41,2,0,14,0;2,0,21,1,0,12,0;1,1,48,0,0,26,1;2,0,24,0,0,13,0;2,1,42,0,0,13,1;2,1,27,1,0,14,1;1,0,31,0,0,50,0;3,0,4,1,1,11,1;3,0,26,0,0,8,0;1,1,47,1,1,53,1;1,0,33,0,0,5,0;3,0,47,0,0,9,0;2,1,28,1,0,24,1;3,1,15,0,0,7,1;3,0,20,0,0,10,0;3,0,19,0,0,8,0;1,1,56,0,1,83,1;2,1,25,0,1,26,1;3,0,33,0,0,8,0;3,1,22,0,0,11,0;2,0,28,0,0,10,0;3,0,25,0,0,7,0;3,1,39,0,5,29,0;2,0,27,0,0,13,0;1,1,19,0,0,30,1;1,0,26,0,0,30,1;3,0,32,0,0,8,0".split(";").map(r=>r.split(",").map(Number)),FM=[60.29,14.25,8.05];
+const $=id=>document.getElementById(id);
+const PRIOR=D.reduce((a,r)=>a+r[6],0)/D.length;
+function prob(c,s,age,fare,i,j){c++;let sw=0,sy=0;
+ for(const r of D){const z=((r[0]-c)/.6)**2+(r[1]==s?0:16)+((r[2]-age)/9)**2+((r[3]-i)/1.5)**2+((r[4]-j)/1.5)**2+((Math.log1p(r[5])-Math.log1p(fare))/.8)**2;
+  const w=Math.exp(-.5*z);sw+=w;sy+=w*r[6]}
+ return Math.min(.98,Math.max(.02,(sy+PRIOR*.5)/(sw+.5)))}
+const tab=n=>{$("pg1").classList.toggle("hide",n!=1);$("pg2").classList.toggle("hide",n!=2);$("t1").classList.toggle("on",n==1);$("t2").classList.toggle("on",n==2)};
+$("t1").onclick=()=>tab(1);$("t2").onclick=()=>{tab(2);render()};
+/* прогнозирование */
+let fcv=2,fsv=0,shown=0,raf;
+for(let k=0;k<100;k++){const d=document.createElement("i");d.style.transitionDelay=(k%10*25+Math.floor(k/10)*30)+"ms";$("dots").appendChild(d)}
+function segs(id,set){$(id).onclick=e=>{const b=e.target.closest("button");if(!b)return;[...$(id).children].forEach(x=>x.classList.remove("on"));b.classList.add("on");set(+b.dataset.v);calc()}}
+segs("fc",v=>fcv=v);segs("fs",v=>fsv=v);
+$("far").oninput=()=>{$("fa").value=$("far").value;calc()};
+$("fa").oninput=()=>{$("far").value=Math.min(80,$("fa").value||0);calc()};$("ff").oninput=calc;
+["fi","fj"].forEach(i=>$(i).onchange=calc);
+const fp_=o=>prob(o.c,o.s,o.a,o.f,o.i,o.j),BS={c:2,s:0,a:28,f:14,i:0,j:0};
+function anim(a,b){cancelAnimationFrame(raf);const t0=performance.now(),st=t=>{const k=Math.min(1,(t-t0)/500);$("fp").textContent=Math.round(a+(b-a)*k)+"%";if(k<1)raf=requestAnimationFrame(st)};raf=requestAnimationFrame(st)}
+function calc(){const a=parseFloat($("fa").value),f=parseFloat($("ff").value);
+ if(!(a>=0)||!(f>=0)){$("fv").textContent="Введите возраст и цену билета";return}
+ const o={c:fcv,s:fsv,a:Math.min(80,a),f:Math.min(300,f),i:+$("fi").value,j:+$("fj").value},p=fp_(o),n=Math.round(p*100),col=`hsl(${p*120},85%,55%)`;
+ anim(shown,n);shown=n;$("fp").style.color=col;
+ document.querySelectorAll("#dots i").forEach((d,k)=>{d.classList.toggle("on",k<n);d.style.setProperty("--c",col)});
+ const v=p>=.7?["","Почти наверняка выживет"]:p>=.5?["","Скорее выживет"]:p>=.25?["","Скорее не выживет"]:["","Почти нет шансов"];
+ $("fv").textContent=v[1];$("fv").style.background=col+"33";$("fv").style.color=col;
+ const fl=[["Класс билета",{c:BS.c}],["Пол",{s:BS.s}],["Возраст",{a:BS.a}],["Цена билета",{f:BS.f}],["Семья",{i:0,j:0}]].map(([n,r])=>[n,p-fp_({...o,...r})]).sort((x,y)=>Math.abs(y[1])-Math.abs(x[1]));
+ $("fac").innerHTML=fl.map(([n,d])=>`<div class="fr"><span>${n}</span><div class="fb"><i style="${d>=0?"left":"right"}:50%;width:${Math.min(50,Math.abs(d)*100)}%;background:${d>=0?"var(--g)":"var(--r)"}"></i></div><b>${d>=0?"+":""}${Math.round(d*100)}</b></div>`).join("")}
+/* titanic drop */
+const mk=()=>({c:2,s:0,a:5,t:{c:0,s:0,a:0}});
+let st=mk(),log=[],sel=null,busy=false,rot=0;
+try{const x=JSON.parse(localStorage.getItem("td4")||"null");if(x){st=x.st;log=x.log||[]}}catch(e){}
+const save=()=>{try{localStorage.setItem("td4",JSON.stringify({st,log:log.slice(0,20)}))}catch(e){}};
+const P=s=>prob(s.c,s.s,s.a*4,FM[s.c],0,0);
+function ups(){const o=[];
+ if(st.c==2)o.push({k:"c",n:"Класс 3 → 2",ch:.6,f:s=>s.c=1,bad:"класс не меняется (3)",b:s=>{}});
+ else if(st.c==1)o.push({k:"c",n:"Класс 2 → 1",ch:.45,f:s=>s.c=0,bad:"класс падает до 3",b:s=>s.c=2});
+ else o.push({k:"c",n:"Класс 1 (максимум)",off:1});
+ if(st.s==0)o.push({k:"s",n:"Пол → женский",ch:.15,f:s=>s.s=1,bad:"пол остаётся мужским",b:s=>{}});else o.push({k:"s",n:"Пол: женский (максимум)",off:1});
+ if(st.a>3)o.push({k:"a",n:"Возраст → 12 лет",ch:.5,f:s=>s.a=3,bad:"возраст +8 лет",b:s=>s.a=Math.min(20,s.a+2)});
+ else if(st.a>1)o.push({k:"a",n:"Возраст → 4 года",ch:.3,f:s=>s.a=1,bad:"возраст +8 лет",b:s=>s.a=Math.min(20,s.a+2)});else o.push({k:"a",n:"Возраст 4 года (максимум)",off:1});
+ return o}
+function render(){
+ $("sc").textContent=st.c+1;$("ss").textContent=st.s?"Женский":"Мужской";$("sa").textContent=st.a*4;
+ const p=P(st);$("pr").textContent=Math.round(p*100)+"%";$("pr").style.color=p>=.5?"var(--g)":"var(--r)";
+ const u=ups();u.forEach(x=>{if(!x.off){x.l=3-st.t[x.k];if(x.l<=0)x.off=1}});if(!sel||!u.find(x=>x.k==sel&&!x.off))sel=(u.find(x=>!x.off)||{}).k||null;
+ $("ups").innerHTML=u.map(x=>`<button class="up ${x.k==sel?"on":""}" data-k="${x.k}" ${x.off?"disabled":""}><b>${x.n}</b><small>${x.off?(x.l===0?"попыток нет":"—"):`шанс ${Math.round(x.ch*100)}% · попыток ${x.l}`}</small><small>${x.off?"":"провал: "+x.bad}</small></button>`).join("");
+ document.querySelectorAll(".up").forEach(b=>b.onclick=()=>{if(busy)return;sel=b.dataset.k;render()});
+ const cur=u.find(x=>x.k==sel),C=2*Math.PI*82;
+ if(cur){$("arc").setAttribute("stroke-dasharray",`${cur.ch*C} ${C}`);$("ch").textContent=Math.round(cur.ch*100)+"%";
+  const n={...st};cur.f(n);const q=P(n),d=Math.round((q-p)*100);$("gain").innerHTML=`${Math.round(q*100)}% <small style="color:${d>=0?"var(--g)":"var(--r)"}">(${d>=0?"+":""}${d})</small>`}
+ else{$("ch").textContent="—";$("gain").textContent="—"}
+ $("go").textContent=cur?"UPGRADE":"НЕТ ПОПЫТОК";$("go").disabled=busy||!cur;$("log").innerHTML=log.slice(0,8).join("<br>")}
+$("go").onclick=()=>{if(busy)return;const cur=ups().find(x=>x.k==sel);if(!cur)return;
+ busy=true;$("go").disabled=true;$("msg").textContent="";
+ const r=Math.random(),ok=r<cur.ch;rot+=1800+((360-(rot%360))+r*360)%360;$("needle").style.transform=`rotate(${rot}deg)`;
+ setTimeout(()=>{if(ok){cur.f(st);$("msg").textContent=`Успех! ${cur.n}`;$("msg").className="w"}else{cur.b(st);$("msg").textContent=`Неудача: ${cur.bad}`;$("msg").className="l"}
+  st.t[cur.k]++;if(!ups().some(x=>st.t[x.k]<3&&!x.off))$("msg").textContent+=" Попытки закончились — отправляй в рейс!";log.unshift(`${ok?"✅":"❌"} ${cur.n}`);busy=false;save();render()},4100)};
+$("send").onclick=()=>{if(busy)return;const p=P(st),ok=Math.random()<p;
+ $("msg").textContent=ok?`Пассажир ВЫЖИЛ (шанс был ${Math.round(p*100)}%)`:`Пассажир НЕ ВЫЖИЛ (шанс был ${Math.round(p*100)}%)`;$("msg").className=ok?"w":"l";
+ log.unshift(`🚢 ${ok?"выжил":"погиб"} (${Math.round(p*100)}%)`);st=mk();save();render()};
+$("reset").onclick=()=>{if(busy)return;st=mk();$("msg").textContent="";save();render()};
+calc();render();
+</script></body></html>
